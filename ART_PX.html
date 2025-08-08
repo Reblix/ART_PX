@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ART Digital</title>
+<style>
+:root{
+  /* Paleta: Azul escuro + Laranja */
+  --bg:#0b1e3a;
+  --panel:#102a54;
+  --muted:#9db3d9;
+  --ink:#f3f6ff;
+  --accent:#f66f1f;       /* laranja principal */
+  --accent-2:#ff8a2b;     /* laranja clara */
+  --danger:#e15b5b;
+  --warn:#ffb347;
+  --ok:#48c78e;
+  --border:#1c3b6b;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:linear-gradient(180deg,#0a1d38 0%,var(--bg) 100%);color:var(--ink);font:500 15px/1.45 Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial}
+.a{color:var(--accent)}
+.app{max-width:1200px;margin:24px auto;padding:0 16px 64px}
+header.top{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.brand{display:flex;gap:12px;align-items:center}
+.brand .logo{width:40px;height:40px;border-radius:9px;display:block}
+.brand h1{font-size:18px;margin:0;font-weight:700;letter-spacing:.3px}
+.hint{color:var(--muted);font-size:13px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab-btn{border:1px solid var(--border);background:transparent;color:var(--ink);padding:10px 14px;border-radius:12px;cursor:pointer}
+.tab-btn[aria-selected="true"]{background:var(--panel);border-color:#2a4c86}
+.grid{display:grid;gap:16px}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 10px 30px #00000022}
+.panel h2{margin:0 0 12px 0;font-size:16px}
+.row{display:grid;gap:12px}
+@media(min-width:740px){.row.cols-2{grid-template-columns:1fr 1fr}.row.cols-3{grid-template-columns:repeat(3,1fr)}.row.cols-4{grid-template-columns:repeat(4,1fr)}.row.cols-1{grid-template-columns:1fr}}
+label{display:grid;gap:6px}
+label span{font-size:12px;color:var(--muted)}
+input[type="text"],input[type="date"],input[type="time"],input[type="datetime-local"],textarea,select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:#0c1f3d;color:var(--ink)}
+textarea{min-height:80px;resize:vertical}
+.btn{border:1px solid var(--border);background:#0c1f3d;color:var(--ink);padding:10px 14px;border-radius:12px;cursor:pointer;touch-action:manipulation}
+.btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#2d1200;font-weight:800;border:none}
+.btn.ghost{background:transparent}
+.btn.warn{background:linear-gradient(90deg,#ffd27f,#ffa45e);color:#331e08;border:none}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.muted{color:var(--muted)}
+.inline{display:flex;gap:8px;align-items:center}
+.table-wrap{border:1px solid var(--border);border-radius:14px;overflow:auto}
+.table-wrap table{width:100%;border-collapse:separate;border-spacing:0}
+.table-wrap th,.table-wrap td{border-bottom:1px solid var(--border);padding:10px 8px;vertical-align:top}
+.table-wrap thead th{position:sticky;top:0;background:linear-gradient(180deg,#123365,var(--panel));z-index:2}
+.table-wrap tbody tr:hover{background:#0b2244}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
+.sev-0{background:#16321d;color:#6df0a3;border:1px solid #214a2c}
+.sev-1{background:#2a2a10;color:#ffe26d;border:1px solid #474718}
+.sev-2{background:#3a1616;color:#ff9a9a;border:1px solid #5a2424}
+.sev-3{background:#3a0f2f;color:#ff84dc;border:1px solid #551947}
+.sev-4{background:#4a0c0c;color:#ffdada;border:1px solid #6a1515}
+.risk-0{background:#0e2c20;color:#7be9b8;border:1px solid #184f39}
+.risk-1{background:#2a2a10;color:#ffe26d;border:1px solid #474718}
+.risk-2{background:#3a1616;color:#ff9a9a;border:1px solid #5a2424}
+.risk-3{background:#4a0c0c;color:#ffc1c1;border:1px solid #6a1515}
+.doc{background:#fff;color:#111;padding:18mm;border-radius:10px;box-shadow:0 10px 40px #00000025;max-width:210mm;width:100%;margin:0 auto}
+.doc h1{font-size:18px;margin:0 0 6px 0}
+.doc h3{font-size:13px;margin:16px 0 6px 0}
+.doc small{color:#444}
+.doc .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.doc .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.doc .box{border:1px solid #ddd;border-radius:6px;padding:8px}
+.doc table{border-collapse:collapse;width:100%}
+.doc th,.doc td{border:1px solid #ddd;padding:6px;font-size:12px;vertical-align:top}
+.doc thead th{background:#f2f4f7}
+.doc .sig{height:50px}
+.doc .doc-header{display:flex;align-items:center;gap:12px;border-bottom:1px solid #ddd;padding-bottom:6px;margin-bottom:8px}
+.doc .doc-logo{height:42px;object-fit:contain}
+.doc .doc-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #ddd;margin-top:8px;padding-top:6px;font-size:11px;color:#444}
+.doc td.risk-0{background:#e2f0d9;font-weight:700;color:#1f5e2b}
+.doc td.risk-1{background:#fff4cc;font-weight:700;color:#6a5400}
+.doc td.risk-2{background:#fce5cd;font-weight:700;color:#7a2e00}
+.doc td.risk-3{background:#f4cccc;font-weight:700;color:#7a0000}
+.doc .box h1{display:none}
+textarea[readonly]{opacity:.7;cursor:not-allowed}
+.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+@media print{body{background:#fff}.app>header,.tabs,.panel.controls,.app-footer{display:none!important} .doc{box-shadow:none;border-radius:0;page-break-after:auto}.page-break{page-break-after:always}}
+
+/* Modal assinatura */
+dialog{border:none;border-radius:14px;max-width:720px;width:96%;padding:0;background:var(--panel);color:var(--ink)}
+dialog::backdrop{background:#0009}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border)}
+.modal-body{padding:16px}
+.sig-box{background:#0c1f3d;border:1px dashed var(--border);border-radius:12px}
+canvas#sigPad{width:100%;height:240px;display:block}
+.note{font-size:12px;color:var(--muted)}
+.app-footer{margin:24px auto 0;max-width:1200px;padding:8px 16px;color:var(--muted);text-align:center}
+.app-footer a{color:var(--accent);text-decoration:none}
+.app-footer a:hover{text-decoration:underline}
+
+@media (max-width:740px){
+  .app{padding:0 12px 88px}
+  header.top{flex-wrap:wrap;gap:8px}
+  header.top .inline{width:100%;justify-content:flex-start;flex-wrap:wrap;gap:8px}
+  .brand h1{font-size:16px}
+  .hint{font-size:12px}
+  .row{grid-template-columns:1fr!important}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .actions .btn{width:100%}
+  .panel.controls{position:sticky;bottom:0;background:var(--panel);border-top:1px solid var(--border);z-index:9}
+  .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap}
+  .tab-btn{flex:0 0 auto}
+  input[type="text"],input[type="date"],input[type="time"],input[type="datetime-local"],textarea,select{font-size:16px}
+  .panel{padding:12px;border-radius:12px}
+  .table-wrap{margin:0 -4px 8px;overflow-x:visible}
+  .table-wrap table,.table-wrap thead,.table-wrap tbody,.table-wrap th,.table-wrap td,.table-wrap tr{display:block}
+  .table-wrap thead{display:none}
+  .table-wrap tbody tr{border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:10px;background:#0c1f3d}
+  .table-wrap td{border:none;padding:6px 8px}
+  .table-wrap td[data-label]::before{content:attr(data-label) ": ";display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+  .table-wrap td:last-child{text-align:right}
+  .doc{padding:12mm}
+  .doc .doc-logo{height:32px}
+  .doc table{font-size:11px}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<header class="top">
+  <div class="brand">
+    <!-- Ícone do app (decorativo) -->
+    <svg class="logo" aria-hidden="true" viewBox="0 0 24 24" width="40" height="40" fill="none">
+      <rect x="2.5" y="2.5" width="19" height="19" rx="4" stroke="var(--accent)" stroke-width="2"/>
+      <path d="M8 8h8 M8 12h8 M8 16h8" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round"/>
+      <rect x="5" y="7.25" width="2" height="2" fill="var(--accent)"/>
+      <rect x="5" y="11.25" width="2" height="2" fill="var(--accent)"/>
+      <rect x="5" y="15.25" width="2" height="2" fill="var(--accent)"/>
+    </svg>
+    <div>
+      <h1>ART Digital</h1>
+      <div class="hint">Elabore uma análise de risco e gere o arquivo PDF!</div>
+    </div>
+  </div>
+  <div class="inline">
+    <button class="btn" id="btnSaveLS" title="Salvar no navegador">Salvar</button>
+    <button class="btn ghost" id="btnLoadLS" title="Carregar do navegador">Carregar</button>
+    <button class="btn warn" id="btnClear" title="Limpar tudo">Limpar</button>
+  </div>
+</header>
+<nav class="tabs" role="tablist" aria-label="Navegação">
+  <button class="tab-btn" role="tab" aria-selected="true" data-tab="form">Preenchimento</button>
+  <button class="tab-btn" role="tab" aria-selected="false" data-tab="preview">Prévia</button>
+  <button class="tab-btn" role="tab" aria-selected="false" data-tab="listas">Listas & Matrizes</button>
+</nav>
+<section class="panel controls" style="margin-top:12px">
+  <div class="actions">
+    <button class="btn" id="btnUpdate">Atualizar Prévia</button>
+    <button class="btn primary" id="btnPDF">Gerar PDF</button>
+    <span class="muted">Dica: se o PDF não baixar, use <b>Ctrl/Cmd+P</b> → "Salvar como PDF".</span>
+  </div>
+</section>
+<div class="grid">
+<section class="panel" id="tab-form" role="tabpanel">
+  <h2>1) Cabeçalho</h2>
+  <div class="row cols-3">
+    <label><span>ID ART</span><input type="text" id="idArt" placeholder="Ex.: ART-2025-0001"></label>
+    <label><span>Data da Emissão</span><input type="date" id="dataEmissao"></label>
+    <label><span>OS/OM nº (opcional)</span><input type="text" id="osom"></label>
+  </div>
+  <div class="row cols-3" style="margin-top:8px">
+    <label><span>Área / Local</span><input type="text" id="area" placeholder="Ex.: Usina 01"></label>
+    <label><span>PRO associado (opcional)</span><input type="text" id="pro"></label>
+    <label><span>Tarefa a ser realizada (Nome da atividade)</span><input type="text" id="tarefa" placeholder="Ex.: Manutenção corretiva do transportador"></label>
+  </div>
+  <div class="row cols-2" style="margin-top:8px">
+    <label><span>Início previsto</span><input type="datetime-local" id="inicio"></label>
+    <label><span>Término previsto</span><input type="datetime-local" id="fim"></label>
+  </div>
+  <!-- Empresa fixa: removidos campos de upload/nome; apenas rodapé opcional -->
+  <div class="row cols-1" style="margin-top:8px">
+    <label><span>Rodapé do documento (opcional)</span><input type="text" id="rodapeText" placeholder="Mensagem adicional no rodapé"></label>
+  </div>
+
+  <h2 style="margin-top:22px">2) Elaboradores da ART</h2>
+  <div class="row cols-2">
+    <label><span>Conhecedor do <b>Método</b></span><input type="text" id="elabMetodo" placeholder="Nome completo"></label>
+    <label><span>Conhecedor da <b>Atividade</b></span><input type="text" id="elabAtividade" placeholder="Nome completo"></label>
+  </div>
+
+  <h2 style="margin-top:22px">3) Equipe Multidisciplinar</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="min-width:160px">Nome</th>
+          <th>Função</th>
+          <th>Matrícula/CPF</th>
+          <th>Empresa</th>
+          <th>Conhecedor</th>
+          <th>Assinatura</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbodyEquipe"></tbody>
+    </table>
+  </div>
+  <div class="inline" style="margin-top:10px">
+    <button class="btn" id="btnAddPessoa">+ Adicionar Pessoa</button>
+    <span class="note">Colete a assinatura de cada integrante em <i>Assinar</i>.</span>
+  </div>
+
+  <h2 style="margin-top:22px">4) Passos da Tarefa & Avaliação de Risco</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="min-width:180px">Passo da Tarefa</th>
+          <th style="min-width:180px">Situação de Risco</th>
+          <th style="min-width:180px">Causas / Descrição</th>
+          <th style="min-width:180px">Consequências</th>
+          <th style="min-width:180px">Medidas de Controle</th>
+          <th>Frequência</th>
+          <th>Severidade</th>
+          <th>Risco</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbodyPassos"></tbody>
+    </table>
+  </div>
+  <div class="inline" style="margin-top:10px">
+    <button class="btn" id="btnAddPasso">+ Adicionar Passo</button>
+    <span class="note">Severidade e Risco são calculados automaticamente.</span>
+  </div>
+</section>
+
+<section class="panel" id="tab-preview" role="tabpanel" hidden>
+  <div class="doc" id="doc"></div>
+</section>
+
+<section class="panel" id="tab-listas" role="tabpanel" hidden>
+  <h2>Listas & Matrizes (padronizadas)</h2>
+  <div class="inline" style="margin:8px 0 12px 0">
+    <label class="inline"><input type="radio" name="sevMode" value="consequence" checked> <span>Severidade <b>pela Consequência</b> (tabela)</span></label>
+    <label class="inline" style="margin-left:12px"><input type="radio" name="sevMode" value="matrix"> <span>Severidade por <b>Matriz</b> (Consequência × Frequência)</span></label>
+  </div>
+  <div class="row cols-2">
+    <label><span>Lista de Situações de Risco (uma por linha)</span>
+      <textarea id="listSituacoes"></textarea>
+    </label>
+    <label><span>Lista de Consequências (ordem da menor para maior gravidade) — <b>travada</b></span>
+      <textarea id="listConsequencias" readonly></textarea>
+    </label>
+  </div>
+  <div class="row cols-2" style="margin-top:8px">
+    <label><span>Lista de Frequências (ordem do mais raro para o mais frequente) — <b>travada</b></span>
+      <textarea id="listFrequencias" readonly></textarea>
+    </label>
+    <label><span>Lista de Severidade (saída do cálculo) — <b>travada</b></span>
+      <textarea id="listSeveridades" readonly></textarea>
+    </label>
+  </div>
+  <div class="panel" style="margin-top:12px">
+    <h3>Matriz Consequência × Frequência → <b>Severidade</b> (travada)</h3>
+    <p class="note">Linhas = <b>consequência</b>; colunas = <b>frequência</b>. Índices 0..4.</p>
+    <textarea id="matrixSeveridade" readonly style="width:100%;min-height:140px;font-family:ui-monospace,Consolas">[
+  [0,0,0,0,1],
+  [0,0,1,1,2],
+  [1,1,2,2,3],
+  [2,3,3,4,4],
+  [3,4,4,4,4]
+]</textarea>
+  </div>
+  <div class="panel" style="margin-top:12px">
+    <h3>Matriz Frequência × Severidade → <b>Risco</b> (travada)</h3>
+    <p class="note">Linhas = <b>frequência</b>; colunas = <b>severidade</b>. Índices 0..3 mapeiam para Baixo/Médio/Alto/Muito Alto.</p>
+    <textarea id="matrixRisco" readonly style="width:100%;min-height:120px;font-family:ui-monospace,Consolas">[
+  [0,0,0,0,1],
+  [0,0,1,1,1],
+  [1,1,2,2,3],
+  [2,2,2,3,3],
+  [2,2,3,3,3]
+]</textarea>
+  </div>
+  <div class="actions" style="margin-top:12px">
+    <button class="btn" id="btnApplyLists">Aplicar apenas Situações</button>
+  </div>
+</section>
+</div>
+
+<!-- Rodapé do app (não do documento em PDF) -->
+<footer class="app-footer">Parex Engenharia</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js" integrity="sha512-YcsIPQ0rKDyQj3tZQdF1AxvQ+5nXdf0QkH1oH0Q6QbY6aM0p8mB7yU5h5H8Z6b2Jc8a9mE+0l8Cwqf9aH2J0VQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+const $=(s,r=document)=>r.querySelector(s);const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+
+// Empresa fixa
+const COMPANY={ name:'Parex Engenharia', logoPath:'/assets/logo.png' };
+
+const defaultLists = {
+    situacoes: [
+        'ABALROAMENTO',
+        'AFOGAMENTO',
+        'AGRESSÃO FÍSICA',
+        'ARCO ELÉTRICO OU CURTO CIRCUITO',
+        'ATAQUE DE ANIMAIS (PEÇONHENTOS, SELVAGENS, INSETOS ETC.)',
+        'ATINGIDO POR DESCARGA ATMOSFÉRICA',
+        'ATINGIDO POR OUTROS',
+        'ATINGIDO POR PROJEÇÃO DE MATERIAIS (FERRAMENTAS, PEÇAS, FRAGMENTOS, FAGULHAS)',
+        'ATINGIDO POR QUEDA DE PEÇAS/ESTRUTURAS/EQUIPAMENTOS/FERRAMENTAS',
+        'ATINGIDO POR ROMPIMENTO DE CABOS/MANGUEIRAS/FLUIDOS SOB PRESSÃO',
+        'ATROPELAMENTO - VEÍCULOS OU EQUIPAMENTOS AUTOMOTORES',
+        'ATROPELAMENTO - VEÍCULOS OU EQUIPAMENTOS FERROVIÁRIOS',
+        'BATIDA CONTRA - ESTRUTURA E EQUIPAMENTOS',
+        'BATIDO POR OUTROS',
+        'COLAPSO ESTRUTURAS/EQUIPAMENTOS/EDIFICAÇÕES',
+        'COLISÃO/TOMBAMENTO/CAPOTAMENTO',
+        'CONTATO COM - PARTES MÓVEIS OU ROTATIVAS DE ESTRUTURAS, MÁQUINAS OU EQUIPAMENTOS',
+        'CONTATO COM OUTROS',
+        'CONTATO COM SUPERFÍCIE ENERGIZADA',
+        'CONTATO/EXPOSIÇÃO A PRODUTOS QUÍMICOS',
+        'CONTATOS COM SUPERFÍCIES CORTANTES/PERFURANTES/ABRASIVAS',
+        'EROSÃO, DESMORONAMENTO DE PILHAS (MINÉRIO, ESTÉRIL, ENTRE OUTROS TIPOS DE MATERIAIS) OU TALUDES',
+        'EXPLOSÃO',
+        'EXPOSIÇÃO A ESPAÇO CONFINADO',
+        'IMPLOSÃO',
+        'INCÊNDIO',
+        'PANE EM AERONAVE',
+        'PRENSAMENTO DO CORPO OU PARTES DO CORPO',
+        'QUEDA DE AERONAVE',
+        'QUEDA DE CARGA/MINÉRIO',
+        'QUEDA DE PESSOA DE NÍVEL DIFERENTE',
+        'QUEDA DE VEÍCULO/EQUIPAMENTOS NA ÁGUA OU NO MAR',
+        'QUEDA/ESCORREGÃO/TROPEÇO (MESMO NÍVEL)',
+        'ROMPIMENTO OU VAZAMENTO DE BARRAGENS',
+        'SOTERRAMENTO/ENGOLFAMENTO',
+        'ROMBAMENTO DE SILOS (INSUMOS OU PRODUTOS)',
+        'VAZAMENTO GASES (INFLAMÁVEIS/TÓXICOS/POLUENTES)',
+        'EXPOSIÇÃO A AGENTES BIOLÓGICOS',
+        'EXPOSIÇÃO A ALTAS TEMPERATURAS',
+        'EXPOSIÇÃO A BAIXAS TEMPERATURAS',
+        'EXPOSIÇÃO A FONTES DE RADIAÇÃO IONIZANTE',
+        'EXPOSIÇÃO A FONTES DE RADIAÇÃO NÃO IONIZANTE (RADIAÇÃO SOLAR, CAMPOS MAGNÉTICOS, ETC.)',
+        'EXPOSIÇÃO A FUMOS METÁLICOS',
+        'EXPOSIÇÃO A LUMINOSIDADE ELEVADA OU REDUZIDA',
+        'EXPOSIÇÃO A OUTROS',
+        'EXPOSIÇÃO A POEIRA/PARTICULADO',
+        'EXPOSIÇÃO A PRESSÕES ANORMAIS',
+        'EXPOSIÇÃO A RUÍDO',
+        'EXPOSIÇÃO A UMIDADE',
+        'EXPOSIÇÃO À VAPORES/NÉVOAS/NEBLINAS',
+        'EXPOSIÇÃO A VIBRAÇÃO (CORPO INTEIRO OU LOCALIZADA)',
+        'SOBRECARGA MENTAL/COGNITIVA',
+        'SOBRECARGA MUSCULAR DINÂMICA',
+        'SOBRECARGA MUSCULAR ESTÁTICA'
+    ],
+    consequencias: [
+        'Eventos que resultem em primeiros socorros de Empregados Próprios ou Terceiros',
+        'Eventos que resultem em lesões / doenças com afastamento do trabalho ou com tratamento médico ou restrição ao trabalho de Empregados Próprios ou Terceiros',
+        'Eventos que resultem em lesões / doenças com vida mudada ou 1 fatalidade de Empregados Próprios ou Terceiros',
+        'Eventos que resultem em múltiplas fatalidades de Empregados Próprios ou Terceiros',
+        'Múltiplas Fatalidade(s), cuja causa seja relacionada a processos operacionais que afetem a Comunidade'
+    ],
+    frequencias: ['Muito Remoto', 'Remoto', 'Possível', 'Provável', 'Muito Provável'],
+    severidades: ['Leve', 'Moderado', 'Significativo', 'Crítico', 'Muito Crítico']
+};
+
+let lists=JSON.parse(JSON.stringify(defaultLists));
+let matrixSeveridade=[[0,0,0,0,1],[0,0,1,1,2],[1,1,2,2,3],[2,3,3,4,4],[3,4,4,4,4]];
+let matrixRisco=[[0,0,0,0,1],[0,0,1,1,1],[1,1,2,2,3],[2,2,2,3,3],[2,2,3,3,3]];
+
+// Removidos: logo/empresaNome do estado
+const state={cab:{idArt:'',dataEmissao:'',osom:'',area:'',pro:'',tarefa:'',inicio:'',fim:'',elabMetodo:'',elabAtividade:'',rodape:''},equipe:[],passos:[],settings:{severityMode:'consequence'}};
+
+function todayISO(){const d=new Date();return d.toISOString().slice(0,10)}
+function init(){
+  $('#dataEmissao').value=todayISO();
+  addPessoa();addPasso();
+  $('#listSituacoes').value=lists.situacoes.join('\n');
+  $('#listConsequencias').value=lists.consequencias.join('\n');
+  $('#listFrequencias').value=lists.frequencias.join('\n');
+  $('#listSeveridades').value=lists.severidades.join('\n');
+  $('#rodapeText').value=state.cab.rodape||'';
+  bind();
+  $$("input[name='sevMode']").forEach(r=>r.checked=(r.value===state.settings.severityMode));
+  renderEquipe();renderPassos();renderDoc();
+  runTests();
+}
+
+function bind(){
+  $$('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    $$('.tab-btn').forEach(b=>b.setAttribute('aria-selected','false'));btn.setAttribute('aria-selected','true');
+    const t=btn.dataset.tab;$('#tab-form').hidden=t!=='form';$('#tab-preview').hidden=t!=='preview';$('#tab-listas').hidden=t!=='listas';
+    if(t==='preview')renderDoc()
+  }));
+  $('#idArt').addEventListener('input',e=>state.cab.idArt=e.target.value);
+  $('#dataEmissao').addEventListener('change',e=>state.cab.dataEmissao=e.target.value);
+  $('#osom').addEventListener('input',e=>state.cab.osom=e.target.value);
+  $('#area').addEventListener('input',e=>state.cab.area=e.target.value);
+  $('#pro').addEventListener('input',e=>state.cab.pro=e.target.value);
+  $('#tarefa').addEventListener('input',e=>state.cab.tarefa=e.target.value);
+  $('#inicio').addEventListener('change',e=>state.cab.inicio=e.target.value);
+  $('#fim').addEventListener('change',e=>state.cab.fim=e.target.value);
+  $('#elabMetodo').addEventListener('input',e=>state.cab.elabMetodo=e.target.value);
+  $('#elabAtividade').addEventListener('input',e=>state.cab.elabAtividade=e.target.value);
+  $('#rodapeText').addEventListener('input',e=>{state.cab.rodape=e.target.value;renderDoc()});
+
+  $('#btnAddPessoa').addEventListener('click',()=>{addPessoa();renderEquipe()});
+  $('#btnAddPasso').addEventListener('click',()=>{addPasso();renderPassos()});
+  $('#btnUpdate').addEventListener('click',renderDoc);
+  $('#btnPDF').addEventListener('click',doPDF);
+  $('#btnApplyLists').addEventListener('click',applyListsFromUI);
+  $$("input[name='sevMode']").forEach(r=>{r.addEventListener('change',()=>{if(r.checked){state.settings.severityMode=r.value;state.passos.forEach((_,i)=>recalcRow(i));renderPassos();renderDoc()}})});
+
+  $('#btnSaveLS').addEventListener('click',()=>{
+    localStorage.setItem('ART_SPA_STATE',JSON.stringify(state));
+    localStorage.setItem('ART_SPA_LISTS',JSON.stringify({lists,matrixSeveridade,matrixRisco}));
+    alert('Salvo no navegador.')
+  });
+  $('#btnLoadLS').addEventListener('click',()=>{
+    const s=localStorage.getItem('ART_SPA_STATE');
+    const l=localStorage.getItem('ART_SPA_LISTS');
+    if(s){
+      const p=JSON.parse(s);
+      Object.assign(state.cab,p.cab||{});
+      state.equipe=p.equipe||[];state.passos=p.passos||[];state.settings=p.settings||state.settings;
+      $('#idArt').value=state.cab.idArt||'';$('#dataEmissao').value=state.cab.dataEmissao||todayISO();
+      $('#osom').value=state.cab.osom||'';$('#area').value=state.cab.area||'';$('#pro').value=state.cab.pro||'';$('#tarefa').value=state.cab.tarefa||'';$('#inicio').value=state.cab.inicio||'';$('#fim').value=state.cab.fim||'';$('#elabMetodo').value=state.cab.elabMetodo||'';$('#elabAtividade').value=state.cab.elabAtividade||'';$('#rodapeText').value=state.cab.rodape||'';
+      $$("input[name='sevMode']").forEach(r=>r.checked=(r.value===state.settings.severityMode));
+      renderEquipe();renderPassos();renderDoc()
+    }
+    if(l){
+      const pl=JSON.parse(l);
+      lists=pl.lists||lists;matrixSeveridade=pl.matrixSeveridade||matrixSeveridade;matrixRisco=pl.matrixRisco||matrixRisco;
+      $('#listSituacoes').value=lists.situacoes.join('\n');
+      $('#listConsequencias').value=lists.consequencias.join('\n');
+      $('#listFrequencias').value=lists.frequencias.join('\n');
+      $('#listSeveridades').value=lists.severidades.join('\n');
+      $('#matrixSeveridade').value=JSON.stringify(matrixSeveridade,null,2);
+      $('#matrixRisco').value=JSON.stringify(matrixRisco,null,2)
+    }
+  });
+  $('#btnClear').addEventListener('click',()=>{if(confirm('Limpar todas as informações?')){localStorage.removeItem('ART_SPA_STATE');location.reload()}});
+  $('#btnCloseDlg').addEventListener('click',()=>dlgClose());
+  $('#btnSigClear').addEventListener('click',sigClear);
+  $('#btnSigSave').addEventListener('click',sigSave);
+  $('#tbodyPassos').addEventListener('change',e=>{const el=e.target;if(!(el instanceof HTMLSelectElement))return;const idx=Number(el.dataset.idx);const field=el.dataset.field;if(Number.isNaN(idx)||!field)return;appSet(['passos',idx,field],el.value);if(field==='consequencia'||field==='frequencia'){recalcRow(idx)}renderPassos()});
+  $('#dlgAssinatura').addEventListener('close',()=>sigDestroy());
+  window.addEventListener('resize',()=>{const dlg=document.getElementById('dlgAssinatura');if(dlg&&dlg.open){sigDestroy();setTimeout(sigInit,60)}});
+  window.addEventListener('orientationchange',()=>{const dlg=document.getElementById('dlgAssinatura');if(dlg&&dlg.open){sigDestroy();setTimeout(sigInit,60)}})
+}
+
+function addPessoa(){state.equipe.push({nome:'',funcao:'',matricula:'',empresa:'',conhecedor:'',assinatura:null})}
+function removePessoa(i){state.equipe.splice(i,1);renderEquipe()}
+function renderEquipe(){const tbody=$('#tbodyEquipe');tbody.innerHTML='';state.equipe.forEach((p,idx)=>{const tr=document.createElement('tr');tr.innerHTML=`
+<td data-label="Nome"><input type="text" value="${html(p.nome)}" placeholder="Nome" oninput="appSet(['equipe',${idx},'nome'], this.value)"></td>
+<td data-label="Função"><input type="text" value="${html(p.funcao)}" placeholder="Função" oninput="appSet(['equipe',${idx},'funcao'], this.value)"></td>
+<td data-label="Matrícula/CPF"><input type="text" value="${html(p.matricula)}" placeholder="Matrícula/CPF" oninput="appSet(['equipe',${idx},'matricula'], this.value)"></td>
+<td data-label="Empresa"><input type="text" value="${html(p.empresa)}" placeholder="Empresa" oninput="appSet(['equipe',${idx},'empresa'], this.value)"></td>
+<td data-label="Conhecedor"><select onchange="appSet(['equipe',${idx},'conhecedor'], this.value)"><option value="" ${p.conhecedor===''?'selected':''}>—</option><option value="Método" ${p.conhecedor==='Método'?'selected':''}>Método</option><option value="Atividade" ${p.conhecedor==='Atividade'?'selected':''}>Atividade</option></select></td>
+<td data-label="Assinatura"><div class="inline"><button class="btn" onclick="openSig(${idx})">Assinar</button><span class="note">${p.assinatura?'Assinado ✔️':'Pendente'}</span></div></td>
+<td data-label="Ações"><button class="btn" onclick="removePessoa(${idx})">Remover</button></td>`;tbody.appendChild(tr)})}
+
+function addPasso(){state.passos.push({passo:'',situacao:lists.situacoes[0]||'',causas:'',consequencia:lists.consequencias[0]||'',controles:'',frequencia:lists.frequencias[0]||'',sevIdx:0,riscoIdx:0});recalcRow(state.passos.length-1)}
+function removePasso(i){state.passos.splice(i,1);renderPassos()}
+function renderPassos(){const tbody=$('#tbodyPassos');tbody.innerHTML='';state.passos.forEach((r,idx)=>{const tr=document.createElement('tr');tr.innerHTML=`
+<td data-label="Passo da Tarefa"><input type="text" placeholder="Descreva o passo" value="${html(r.passo)}" oninput="appSet(['passos',${idx},'passo'], this.value)"></td>
+<td data-label="Situação de Risco">${selectHTML(lists.situacoes,r.situacao,'situacao',idx)}</td>
+<td data-label="Causas / Descrição"><textarea placeholder="Causas / descrição" oninput="appSet(['passos',${idx},'causas'], this.value)">${html(r.causas)}</textarea></td>
+<td data-label="Consequências">${selectHTML(lists.consequencias,r.consequencia,'consequencia',idx)}</td>
+<td data-label="Medidas de Controle"><textarea placeholder="Medidas de controle" oninput="appSet(['passos',${idx},'controles'], this.value)">${html(r.controles)}</textarea></td>
+<td data-label="Frequência">${selectHTML(lists.frequencias,r.frequencia,'frequencia',idx)}</td>
+<td data-label="Severidade"><span class="badge sev-${r.sevIdx}">${lists.severidades[r.sevIdx]||'-'}</span></td>
+<td data-label="Risco"><span class="badge risk-${r.riscoIdx}">${riskLabel(r.riscoIdx)}</span></td>
+<td data-label="Ações"><button class="btn" onclick="removePasso(${idx})">Remover</button></td>`;tbody.appendChild(tr)})}
+
+function recalcRow(idx){const r=state.passos[idx];let sevIdx=0;if(state.settings&&state.settings.severityMode==='consequence'){sevIdx=Math.max(0,lists.consequencias.indexOf(r.consequencia))}else{const ci=lists.consequencias.indexOf(r.consequencia);const fiTmp=lists.frequencias.indexOf(r.frequencia);sevIdx=(matrixSeveridade&&matrixSeveridade[ci]&&matrixSeveridade[ci][fiTmp])??0}const fi=lists.frequencias.indexOf(r.frequencia);const riscoIdx=(matrixRisco&&matrixRisco[fi]&&matrixRisco[fi][sevIdx])??0;r.sevIdx=sevIdx;r.riscoIdx=riscoIdx}
+function riskLabel(i){return['Baixo','Médio','Alto','Muito Alto'][i]||'-'}
+
+function renderDoc(){
+  const d=state.cab;const fmt=iso=>iso?new Date(iso).toLocaleString('pt-BR'):'';
+  const equipeRows=state.equipe.map((p,i)=>`<tr><td>${html(p.nome)}</td><td>${html(p.empresa||'')}</td><td>${html(p.matricula||'')}</td><td style="text-align:center">${p.conhecedor||'—'}</td><td>${p.assinatura?`<img src="${p.assinatura}" class="sig" alt="assinatura">`:'—'}</td></tr>`).join('');
+  const passosRows=state.passos.map((r,i)=>`<tr><td style="width:28mm">${i+1}</td><td>${html(r.passo)}</td><td>${html(r.situacao)}</td><td>${html(r.causas)}</td><td>${html(r.consequencia)}</td><td>${html(r.controles)}</td><td>${lists.frequencias.indexOf(r.frequencia)>-1?lists.frequencias[lists.frequencias.indexOf(r.frequencia)]:''}</td><td>${lists.severidades[r.sevIdx]||''}</td><td class="risk-${r.riscoIdx}">${riskLabel(r.riscoIdx)}</td></tr>`).join('');
+
+  $('#doc').innerHTML=
+  `<div class="doc-header">
+      <img src="${COMPANY.logoPath}" class="doc-logo" alt="logo da empresa" onerror="this.style.display='none'">
+      <div><h1>ART Digital</h1><small>${COMPANY.name}</small></div>
+    </div>
+    <div class="box">
+      <div class="grid-3">
+        <div><small>ID ART:</small> <b>${html(d.idArt||'—')}</b></div>
+        <div><small>Data da emissão:</small> <b>${html(d.dataEmissao||'')}</b><br><small>OS/OM nº:</small> <b>${html(d.osom||'—')}</b></div>
+        <div><small>Área / Local:</small> <b>${html(d.area||'—')}</b><br><small>PRO associado:</small> <b>${html(d.pro||'—')}</b></div>
+      </div>
+    </div>
+    <div class="box" style="margin-top:8px">
+      <div class="grid-2">
+        <div><small>Tarefa a ser realizada</small><div><b>${html(d.tarefa||'—')}</b></div></div>
+        <div><small>Período previsto</small><div><b>${fmt(d.inicio)} — ${fmt(d.fim)}</b></div></div>
+      </div>
+    </div>
+
+    <h3>Elaboradores</h3>
+    <div class="grid-2">
+      <div class="box"><small>Conhecedor do Método</small><div><b>${html(d.elabMetodo||'—')}</b></div></div>
+      <div class="box"><small>Conhecedor da Atividade</small><div><b>${html(d.elabAtividade||'—')}</b></div></div>
+    </div>
+
+    <h3 style="margin-top:8px">Equipe Multidisciplinar</h3>
+    <table>
+      <thead><tr><th>Nome</th><th>Empresa</th><th>Matrícula/CPF</th><th>Conhecedor</th><th>Assinatura</th></tr></thead>
+      <tbody>${equipeRows||'<tr><td colspan="5">—</td></tr>'}</tbody>
+    </table>
+
+    <h3 style="margin-top:12px">Passos da Tarefa & Avaliação de Riscos</h3>
+    <table>
+      <thead><tr><th style="width:14mm">Item</th><th>Passo da Tarefa</th><th>Situação de Risco</th><th>Causas / Descrição</th><th>Consequências / Efeitos</th><th>Medidas de Controle</th><th>Frequência</th><th>Severidade</th><th>Risco</th></tr></thead>
+      <tbody>${passosRows||'<tr><td colspan="9">—</td></tr>'}</tbody>
+    </table>
+
+    <div class="doc-footer">
+      <span>${COMPANY.name}${d.rodape?(' — '+html(d.rodape)) : ''}</span>
+      <span>Gerado em: ${new Date().toLocaleString('pt-BR')}</span>
+    </div>`
+}
+
+function applyListsFromUI(){try{lists.situacoes=$('#listSituacoes').value.split('\n').map(s=>s.trim()).filter(Boolean);state.passos.forEach((p,idx)=>{if(!lists.situacoes.includes(p.situacao))p.situacao=lists.situacoes[0]||'';recalcRow(idx)});renderPassos();renderDoc();alert('Situações de risco atualizadas. As demais listas e matrizes estão travadas para padronização.')}catch(err){alert('Erro ao aplicar lista: '+err.message)}}
+
+async function doPDF(){try{const target=document.getElementById('doc');if(!target){alert('Nada para imprimir.');return}renderDoc();const filename=(state.cab.idArt?state.cab.idArt+' - ':'')+'ART.pdf';const opt={margin:[10,10,10,10],filename,image:{type:'jpeg',quality:0.95},html2canvas:{scale:2,useCORS:true},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}};await html2pdf().set(opt).from(target).save()}catch(err){console.warn('Falha ao gerar via html2pdf, usando impressão:',err);window.print()}}
+
+function html(s){return(s||'').toString().replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]))}
+function selectHTML(options,selected,field,idx){const opts=options.map(o=>`<option value="${html(o)}" ${o===selected?'selected':''}>${html(o)}</option>`).join('');return `<select data-field="${field}" data-idx="${idx}">${opts}</select>`}
+function appSet(path,value){let ref=state;for(let i=0;i<path.length-1;i++){ref=ref[path[i]]}ref[path[path.length-1]]=value}
+
+// Assinatura
+let sigCtx=null,sigDrawing=false,sigLast=null,sigTargetIdx=null;
+function openSig(idx){sigTargetIdx=idx;dlgOpen()}
+function dlgOpen(){const d=$('#dlgAssinatura');d.showModal();setTimeout(sigInit,10)}
+function dlgClose(){$('#dlgAssinatura').close()}
+function sigInit(){const canvas=document.getElementById('sigPad');const dpr=Math.max(1,window.devicePixelRatio||1);const rect=canvas.getBoundingClientRect();canvas.width=Math.floor(rect.width*dpr);canvas.height=Math.floor(rect.height*dpr);sigCtx=canvas.getContext('2d');sigCtx.scale(dpr,dpr);sigCtx.lineWidth=2;sigCtx.lineCap='round';sigCtx.strokeStyle='#e6e8f5';sigCtx.fillStyle='#0c1f3d';sigCtx.fillRect(0,0,rect.width,rect.height);const pos=e=>{if(e.touches&&e.touches[0])return{x:e.touches[0].clientX-rect.left,y:e.touches[0].clientY-rect.top};return{x:e.clientX-rect.left,y:e.clientY-rect.top}};const draw=p=>{if(!sigLast){sigLast=p;return}sigCtx.beginPath();sigCtx.moveTo(sigLast.x,sigLast.y);sigCtx.lineTo(p.x,p.y);sigCtx.stroke();sigLast=p};const start=e=>{sigDrawing=true;sigLast=null;draw(pos(e))};const move=e=>{if(!sigDrawing)return;draw(pos(e))};const end=()=>{sigDrawing=false;sigLast=null};canvas.addEventListener('mousedown',start);canvas.addEventListener('mousemove',move);window.addEventListener('mouseup',end);canvas.addEventListener('touchstart',start,{passive:true});canvas.addEventListener('touchmove',move,{passive:true});window.addEventListener('touchend',end);canvas._cleanup=()=>{canvas.removeEventListener('mousedown',start);canvas.removeEventListener('mousemove',move);window.removeEventListener('mouseup',end);canvas.removeEventListener('touchstart',start);canvas.removeEventListener('touchmove',move);window.removeEventListener('touchend',end)}}
+function sigDestroy(){const c=document.getElementById('sigPad');if(c&&c._cleanup){c._cleanup()}sigCtx=null}
+function sigClear(){if(!sigCtx)return;const rect=document.getElementById('sigPad').getBoundingClientRect();sigCtx.fillStyle='#0c1f3d';sigCtx.fillRect(0,0,rect.width,rect.height)}
+function sigSave(){const canvas=document.getElementById('sigPad');const dataURL=canvas.toDataURL('image/png');if(sigTargetIdx!=null){state.equipe[sigTargetIdx].assinatura=dataURL;renderEquipe()}dlgClose()}
+
+function runTests(){const sev1=matrixSeveridade[4][4];const risco1=matrixRisco[4][sev1];console.assert(sev1===4,'Teste1: severidade esperada 4, obtida',sev1);console.assert(risco1===3,'Teste1: risco esperado 3, obtido',risco1);const sev2=matrixSeveridade[0][1];const risco2=matrixRisco[1][sev2];console.assert(sev2===0,'Teste2: severidade esperada 0, obtida',sev2);console.assert(risco2===0,'Teste2: risco esperado 0, obtido',risco2);const sev3=matrixSeveridade[2][2];const risco3=matrixRisco[2][sev3];console.assert(sev3===2&&risco3===2,'Teste3 falhou',{sev3,risco3});const sev4=matrixSeveridade[3][3];const risco4=matrixRisco[3][sev4];console.assert(sev4===4&&risco4===3,'Teste4 falhou',{sev4,risco4});const b=state.settings.severityMode;state.settings.severityMode='consequence';if(!state.passos[0])addPasso();state.passos[0].frequencia=lists.frequencias[0];lists.consequencias.forEach((c,i)=>{state.passos[0].consequencia=c;recalcRow(0);console.assert(state.passos[0].sevIdx===i,'Map conseq→sev falhou',i,state.passos[0].sevIdx)});state.settings.severityMode='matrix';state.passos[0].consequencia=lists.consequencias[1];state.passos[0].frequencia=lists.frequencias[4];recalcRow(0);const sevM=matrixSeveridade[1][4];const riscoM=matrixRisco[4][sevM];console.assert(state.passos[0].sevIdx===sevM&&state.passos[0].riscoIdx===riscoM,'Teste matrix específico falhou',{sev:state.passos[0].sevIdx,risco:state.passos[0].riscoIdx});state.passos[0].frequencia=lists.frequencias[0];state.passos[0].consequencia=lists.consequencias[4];recalcRow(0);console.assert(matrixRisco[0][state.passos[0].sevIdx]===1,'Teste risco baixo esperado 1 falhou');state.settings.severityMode=b}
+
+window.addEventListener('DOMContentLoaded',init);
+</script>
+
+<!-- Modal de assinatura -->
+<dialog id="dlgAssinatura">
+  <div class="modal-head">
+    <strong>Coletar assinatura</strong>
+    <button class="btn" id="btnCloseDlg">Fechar</button>
+  </div>
+  <div class="modal-body">
+    <div class="sig-box"><canvas id="sigPad"></canvas></div>
+    <div class="inline" style="margin-top:8px">
+      <button class="btn" id="btnSigClear">Limpar</button>
+      <button class="btn primary" id="btnSigSave">Salvar Assinatura</button>
+      <span class="note">Assine com o mouse ou toque.</span>
+    </div>
+  </div>
+</dialog>
+</body>
+</html>
